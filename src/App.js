@@ -1,23 +1,17 @@
-import logo from './logo.svg';
-import './App.css';
+import './scss/app.scss';
+import React, { useState } from 'react';
+import { Outlet } from 'react-router-dom';
+import Header from './components/Header';
 
+export const SearchContext = React.createContext([]);
 function App() {
+  const [searchVal, setSearchVal] = useState('');
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="wrapper">
+      <SearchContext.Provider value={[searchVal, setSearchVal]}>
+        <Header />
+        <Outlet />
+      </SearchContext.Provider>
     </div>
   );
 }
