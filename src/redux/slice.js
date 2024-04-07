@@ -30,5 +30,8 @@ export const filterSlice = createSlice({
     },
   },
 });
+export const filterSelector = (store) => store.filter;
+export const sortSelector = (store) => store.filter.sort;
+export const chosenVaiantSelector = (store) => store.filter.sort.variant;
 export const { setCategory, setSort, changePage, setSearch, changeUrl } = filterSlice.actions;
 export default filterSlice.reducer;

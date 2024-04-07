@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -10,24 +10,21 @@ import PizzaBlock from '../../components/PizzaBlock';
 import PizzaBlockSkeleton from '../../components/PizzaBlock/PizzaBlockSkeleton';
 import Pagination from '../../components/Pagination';
 import { changeUrl } from '../../redux/slice'; //......................................
-import { setPizzas } from '../../redux/pizzaSlice';
+import { fetchPizzas } from '../../redux/pizzaSlice';
 import { list } from '../../components/Sort';
+import { filterSelector, sortSelector } from '../../redux/slice';
+import { pizzasSelector } from '../../redux/pizzaSlice';
 const Home = () => {
-  // const [pizzas, setPizzas] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
   const isSearch = useRef(false);
   const isMounted = useRef(false);
 
-  const searchVal = useSelector((store) => store.filter.searchVal);
-  const chosenCategory = useSelector((store) => store.filter.activeCategory);
-  const { variant, searchVariant } = useSelector((store) => store.filter.sort);
-  const selectedPage = useSelector((store) => store.filter.selectedPage);
-  const { pizzas } = useSelector((store) => store.pizzas);
+  const { variant, searchVariant } = useSelector(sortSelector);
+  const { searchVal, selectedPage, activeCategory: chosenCategory } = useSelector(filterSelector);
+  const { pizzas, status } = useSelector(pizzasSelector);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const fetchPizzas = async () => {
-    setIsLoading(true);
+  const getPizzas = async () => {
     const url = `https://65b110fcd16d31d11bddf8be.mockapi.io/pizzas?`;
     const sortQuery = `sortBy=${searchVariant.replace('-', '')}`;
     const orderByQuery = searchVariant.charAt(0) === '-' ? '&order=desc' : '';
@@ -35,18 +32,7 @@ const Home = () => {
     const searhQuery = searchVal ? `&search=${searchVal}` : '';
     const pageQuery = `&page=${selectedPage}&limit=4`;
 
-    try {
-      const { data } = await axios.get(
-        `${url}${sortQuery}${orderByQuery}${categoryQuery}${searhQuery}${pageQuery}`,
-      );
-      console.log(data);
-      dispatch(setPizzas(data));
-    } catch (err) {
-      setPizzas([]);
-      console.log('AN ERROR HAS OCCURED !!!!', err);
-    } finally {
-      setIsLoading(false);
-    }
+    dispatch(fetchPizzas({ url, sortQuery, orderByQuery, categoryQuery, searhQuery, pageQuery }));
   };
 
   useEffect(() => {
@@ -69,7 +55,7 @@ const Home = () => {
 
   useEffect(() => {
     if (!isSearch.current) {
-      fetchPizzas();
+      getPizzas();
     }
     isSearch.current = false;
   }, [searchVal, chosenCategory, searchVariant, selectedPage]);
@@ -82,7 +68,6 @@ const Home = () => {
         sortBy: searchVariant,
         category: chosenCategory,
       });
-      console.log(`?${urlString}`);
       navigate(`?${urlString}`);
     }
     isMounted.current = true;
@@ -97,8 +82,13 @@ const Home = () => {
         </div>
         <h2 className="content__title">Вся піцца</h2>
         <div className="content__items">
-          {isLoading ? (
-            [...new Array(6)].map((arrayItem, idx) => <PizzaBlockSkeleton key={idx} />)
+          {status === 'error' ? (
+            <div className="content__items__error">
+              <h3>Wrong search parameters (</h3>
+              <p>try smt else or refresh the page</p>
+            </div>
+          ) : status === 'loading' ? (
+            [...new Array(4)].map((arrayItem, idx) => <PizzaBlockSkeleton key={idx} />)
           ) : !pizzas.length ? (
             <h3 style={{ margin: '50px' }}>:( Такої піци не знайдено, спробуйте знайти іншу</h3>
           ) : (

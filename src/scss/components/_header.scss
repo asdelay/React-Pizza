@@ -15,6 +15,7 @@
   }
 
   &__logo {
+    margin-left: 0px;
     display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
@@ -47,5 +48,9 @@
     p {
       color: #7b7b7b;
     }
+  }
+  &__cart {
+    width: 167px;
+    justify-self: flex-end;
   }
 }

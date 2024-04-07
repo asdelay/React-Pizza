@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import styles from './index.module.scss';
 import { setSearch } from '../../redux/slice';
+import { filterSelector } from '../../redux/slice';
 
 const Index = () => {
   const firstRender = useRef(true);
@@ -15,9 +16,7 @@ const Index = () => {
     [],
   );
   const inputRef = useRef();
-  const searchFromRedux = useSelector((store) => {
-    return store.filter.searchVal;
-  });
+  const { searchVal: searchFromRedux } = useSelector(filterSelector);
   useEffect(() => {
     firstRender.current = true;
   }, []);

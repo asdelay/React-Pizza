@@ -2,8 +2,9 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { addItem, removeItem, clearItems, clearOneItem } from '../../redux/cartSlice';
 import { CartEmpty } from '../../components/CartEmpty';
+import { cartSelector } from '../../redux/cartSlice';
 const Cart = () => {
-  const { items, totalPrice, itemsCount } = useSelector((store) => store.cart);
+  const { items, totalPrice, itemsCount } = useSelector(cartSelector);
 
   const dispatch = useDispatch();
   if (totalPrice === 0) {

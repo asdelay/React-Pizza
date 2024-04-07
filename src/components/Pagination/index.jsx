@@ -1,17 +1,21 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import qs from 'qs';
 
 import { changePage } from '../../redux/slice';
 import styles from './Pagination.module.scss';
 const Pagination = () => {
+  const [initPage, setInitPage] = useState(0);
   useEffect(() => {
-    console.log('render');
-  });
+    const selectedPage = qs.parse(window.location.search.slice(1)).page - 1;
+    Number.isNaN(selectedPage) ? setInitPage(0) : setInitPage(selectedPage);
+  }, []);
+
   const dispatch = useDispatch();
   return (
     <ReactPaginate
-      initialPage={0}
+      forcePage={initPage}
       className={styles.root}
       breakLabel="..."
       nextLabel=">"

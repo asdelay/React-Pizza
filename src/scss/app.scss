@@ -37,6 +37,12 @@ p{
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
+
+    &__error {
+      text-align: center;
+      margin: 15px;
+      padding: 15px;
+    }
   }
 
   &__top {
@@ -44,6 +50,7 @@ p{
     align-items: center;
     justify-content: space-between;
   }
+  
 }
 
 .container {
