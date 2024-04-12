@@ -8,6 +8,7 @@ import App from './App';
 import Home from './pages/Home';
 import ErrorPage from './pages/ErrorPage';
 import Cart from './pages/Cart';
+import { Pizza } from './pages/Pizza';
 const router = createBrowserRouter([
   {
     path: '/',
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
       {
         path: 'cart',
         element: <Cart />,
+      },
+      {
+        path: 'pizza/:id',
+        element: <Pizza />,
       },
     ],
   },

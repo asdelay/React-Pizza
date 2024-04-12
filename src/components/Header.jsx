@@ -6,7 +6,6 @@ import { cartSelector } from '../redux/cartSlice';
 function Header() {
   const { pathname } = useLocation();
   const { totalPrice, items, itemsCount } = useSelector(cartSelector);
-  console.log(pathname);
   return (
     <div className="header">
       <div className="container">
